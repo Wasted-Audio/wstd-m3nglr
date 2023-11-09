@@ -1,0 +1,58 @@
+{
+    "name": "WSTD_M3NGLR",
+    "dpf": {
+        "dpf_path": "../dep/",
+        "makefile_dep": [
+            "wstd.clrs"
+        ],
+        "enable_ui": true,
+        "enable_modgui": true,
+        "ui_size": {
+            "width": 737,
+            "height": 545
+        },
+        "midi_input": 0,
+        "midi_output": 0,
+        "enumerators": {
+            "High_Sqnc": [
+                "C~F~S",
+                "C~S~F",
+                "F~C~S",
+                "F~S~C",
+                "S~C~F",
+                "S~F~C"
+            ],
+            "Mid_Sqnc": [
+                "C~F~S",
+                "C~S~F",
+                "F~C~S",
+                "F~S~C",
+                "S~C~F",
+                "S~F~C"
+            ],
+            "Low_Sqnc": [
+                "C~F~S",
+                "C~S~F",
+                "F~C~S",
+                "F~S~C",
+                "S~C~F",
+                "S~F~C"
+            ]
+        },
+        "version": "0, 0, 1",
+        "license": "GPL-3.0-or-later",
+        "homepage": "https://wasted.audio/software/wstd_m3nglr",
+        "plugin_uri": "https://wasted.audio/software/wstd_m3nglr",
+        "plugin_clap_id": "audio.wasted.wstd_m3nglr",
+        "plugin_formats": [
+            "jack"
+        ],
+        "lv2_info": "lv2:DistortionPlugin",
+        "vst3_info": "Fx|Distortion|Stereo",
+        "clap_info": [
+            "audio-effect",
+            "glitch",
+            "stereo"
+        ]
+    }
+}
