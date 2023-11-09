@@ -39,13 +39,16 @@
                 "S~F~C"
             ]
         },
-        "version": "0, 0, 1",
+        "version": "0, 1, 0",
         "license": "GPL-3.0-or-later",
         "homepage": "https://wasted.audio/software/wstd_m3nglr",
         "plugin_uri": "https://wasted.audio/software/wstd_m3nglr",
         "plugin_clap_id": "audio.wasted.wstd_m3nglr",
         "plugin_formats": [
-            "jack"
+            "lv2_sep",
+            "vst2",
+            "vst3",
+            "clap"
         ],
         "lv2_info": "lv2:DistortionPlugin",
         "vst3_info": "Fx|Distortion|Stereo",
