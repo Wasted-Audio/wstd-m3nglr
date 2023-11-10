@@ -24,6 +24,7 @@ const char* comChar(const char* char1, const char* char2)
 struct mangParams {
     int crshr;
     int fldr;
+    int gain;
     int lmtr;
     int mix;
     int smthr;
@@ -31,11 +32,40 @@ struct mangParams {
 };
 
 // --------------------------------------------------------------------------------------------------------------------
+enum HeavyParams {
+    HIGH,
+    HIGH_CRSHR,
+    HIGH_FLDR,
+    HIGH_GAIN,
+    HIGH_LMTR,
+    HIGH_MIX,
+    HIGH_SMTHR,
+    HIGH_SQNC,
+    LOW,
+    LOW_CRSHR,
+    LOW_FLDR,
+    LOW_GAIN,
+    LOW_LMTR,
+    LOW_MIX,
+    LOW_SMTHR,
+    LOW_SQNC,
+    MID,
+    MID_CRSHR,
+    MID_FLDR,
+    MID_FREQ,
+    MID_GAIN,
+    MID_LMTR,
+    MID_MIX,
+    MID_SMTHR,
+    MID_SQNC,
+};
+
 class ImGuiPluginUI : public UI
 {
     float fhigh = 0.0f;
     int fhigh_crshr = 512.0;
     float fhigh_fldr = 1.0f;
+    float fhigh_gain = 0.0f;
     bool fhigh_lmtr = 1.0f != 0.0f;
     float fhigh_mix = 50.0f;
     float fhigh_smthr = 1.0f;
@@ -44,6 +74,7 @@ class ImGuiPluginUI : public UI
     float flow = 0.0f;
     int flow_crshr = 512.0;
     float flow_fldr = 1.0f;
+    float flow_gain = 0.0f;
     bool flow_lmtr = 1.0f != 0.0f;
     float flow_mix = 50.0f;
     float flow_smthr = 1.0f;
@@ -53,6 +84,7 @@ class ImGuiPluginUI : public UI
     int fmid_crshr = 512.0;
     float fmid_fldr = 1.0f;
     float fmid_freq = 1337.0f;
+    float fmid_gain = 0.0f;
     bool fmid_lmtr = 1.0f != 0.0f;
     float fmid_mix = 50.0f;
     float fmid_smthr = 1.0f;
@@ -102,70 +134,79 @@ protected:
     void parameterChanged(uint32_t index, float value) override
     {
         switch (index) {
-            case 0:
+            case HIGH:
                 fhigh = value;
                 break;
-            case 1:
+            case HIGH_CRSHR:
                 fhigh_crshr = value;
                 break;
-            case 2:
+            case HIGH_FLDR:
                 fhigh_fldr = value;
                 break;
-            case 3:
+            case HIGH_GAIN:
+                fhigh_gain = value;
+                break;
+            case HIGH_LMTR:
                 fhigh_lmtr = value != 0.0f;
                 break;
-            case 4:
+            case HIGH_MIX:
                 fhigh_mix = value;
                 break;
-            case 5:
+            case HIGH_SMTHR:
                 fhigh_smthr = value;
                 break;
-            case 6:
+            case HIGH_SQNC:
                 fhigh_sqnc = value;
                 break;
-            case 7:
+            case LOW:
                 flow = value;
                 break;
-            case 8:
+            case LOW_CRSHR:
                 flow_crshr = value;
                 break;
-            case 9:
+            case LOW_FLDR:
                 flow_fldr = value;
                 break;
-            case 10:
+            case LOW_GAIN:
+                flow_gain = value;
+                break;
+            case LOW_LMTR:
                 flow_lmtr = value != 0.0f;
                 break;
-            case 11:
+            case LOW_MIX:
                 flow_mix = value;
                 break;
-            case 12:
+            case LOW_SMTHR:
                 flow_smthr = value;
                 break;
-            case 13:
+            case LOW_SQNC:
                 flow_sqnc = value;
                 break;
-            case 14:
+            case MID:
                 fmid = value;
                 break;
-            case 15:
+            case MID_CRSHR:
                 fmid_crshr = value;
                 break;
-            case 16:
+            case MID_FLDR:
                 fmid_fldr = value;
                 break;
-            case 17:
+            case MID_FREQ:
                 fmid_freq = value;
                 break;
-            case 18:
+            case MID_GAIN:
+                fmid_gain = value;
+                break;
+            case MID_LMTR:
                 fmid_lmtr = value != 0.0f;
                 break;
-            case 19:
+            case MID_MIX:
                 fmid_mix = value;
                 break;
-            case 20:
+            case MID_SMTHR:
                 fmid_smthr = value;
                 break;
-            case 21:
+            case MID_SQNC:
                 fmid_sqnc = value;
                 break;
 
@@ -223,7 +264,7 @@ protected:
             ImGui::PopStyleColor();
             if (ImGuiKnobs::Knob(
                 comChar("##Fldr", name), &ffldr, 1.0f, 13.37f, elevstep, "%.2f",
-                ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 11))
+                ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 13))
             {
                 if (ImGui::IsItemActivated())
                 {
@@ -254,7 +295,7 @@ protected:
             ImGui::PopStyleColor();
             if (ImGuiKnobs::Knob(
                 comChar("##Smthr", name), &fsmthr, 1.0f, 13.37f, elevstep, "%.2f",
-                ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 11))
+                ImGuiKnobVariant_SteppedTick, hundred, KnobFlags, 13))
             {
                 if (ImGui::IsItemActivated())
                 {
@@ -271,10 +312,10 @@ protected:
         return fsmthr;
     }
 
-    std::tuple<int, int, float, float, bool, float>
-    showManglr(const char* name, mangParams prms, int fsqnc, int fcrshr, float ffldr, float fsmthr, bool flmtr, float fmix, float feq,
+    std::tuple<int, int, float, float, bool, float, float>
+    showManglr(const char* name, mangParams prms, int fsqnc, int fcrshr, float ffldr, float fsmthr, bool flmtr, float fgain, float fmix, float feq,
                 float scaleFactor, float comboWidth, float toggleWidth, float knobWidth, float hundred,
-                float crshstep, float elevstep, float percstep, ImFont* defaultFont, ImFont* mediumFont,
+                float crshstep, float elevstep, float percstep, float dbstep, ImFont* defaultFont, ImFont* mediumFont,
                 ImColor colorActive, ImColor colorHovered, ImColor colorHeader)
         {
 
@@ -430,6 +471,29 @@ protected:
                 // Title text height
                 ImGui::Dummy(ImVec2(0.0f, textSize.y));
 
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)colorActive);
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)colorHovered);
+                if (ImGuiKnobs::Knob(
+                    comChar("##Gain", name), &fgain, -20.0f, 0.0f, dbstep, "%.2fdB", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 5))
+                {
+                    if (ImGui::IsItemActivated())
+                    {
+                        editParameter(prms.gain, true);
+                        if (ImGui::IsMouseDoubleClicked(0))
+                            fgain = 0.0f;
+                    }
+                    setParameterValue(prms.gain, fgain);
+                }
+                ImGui::PopStyleColor(2);
+            }
+            ImGui::EndGroup();
+            ImGui::SameLine();
+
+            ImGui::BeginGroup();
+            {
+                // Title text height
+                ImGui::Dummy(ImVec2(0.0f, textSize.y));
+
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)MixActive);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)MixHovered);
                 if (ImGuiKnobs::Knob(
@@ -456,6 +520,7 @@ protected:
             ffldr,
             fsmthr,
             flmtr,
+            fgain,
             fmix
         );
     }
@@ -555,28 +620,6 @@ protected:
             auto ImGuiKnob_FlagsDB = ImGuiKnob_Flags + ImGuiKnobFlags_dB;
             auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
 
-            // EQ Text
-            // ImGui::BeginGroup();
-            // {
-            //     ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
-            //     ImGui::Dummy(ImVec2(0.0f, 38.0f) * scaleFactor);
-            //     CenterTextX("High", eqText);
-            //     ImGui::Dummy(ImVec2(0.0f, 80.0f) * scaleFactor);
-            //     CenterTextX("Mid", eqText);
-            //     ImGui::PopFont();
-            //     ImGui::Dummy(ImVec2(0.0f, 60.0f) * scaleFactor);
-            //     ImGui::PushFont(smallFont);
-            //     CenterTextX("Mid", eqText);
-            //     CenterTextX("Freq", eqText);
-            //     ImGui::PopFont();
-            //     ImGui::PushFont(defaultFont);
-            //     ImGui::Dummy(ImVec2(0.0f, 60.0f) * scaleFactor);
-            //     CenterTextX("Low", eqText);
-            //     ImGui::PopStyleColor();
-            // }
-            // ImGui::EndGroup();
-            // ImGui::SameLine();
-
             // EQ Section
             ImGui::BeginGroup();
             {
@@ -589,11 +632,11 @@ protected:
 
                     if (ImGui::IsItemActivated())
                     {
-                        editParameter(0, true);
+                        editParameter(HIGH, true);
                         if (ImGui::IsMouseDoubleClicked(0))
                             fhigh = 0.0f;
                     }
-                    setParameterValue(0, fhigh);
+                    setParameterValue(HIGH, fhigh);
                 }
                 ImGui::PopStyleColor(2);
 
@@ -605,11 +648,11 @@ protected:
                 {
                     if (ImGui::IsItemActivated())
                     {
-                        editParameter(14, true);
+                        editParameter(MID, true);
                         if (ImGui::IsMouseDoubleClicked(0))
                             fmid = 0.0f;
                     }
-                    setParameterValue(14, fmid);
+                    setParameterValue(MID, fmid);
                 }
                 ImGui::PopStyleColor(2);
 
@@ -621,11 +664,11 @@ protected:
                 {
                     if (ImGui::IsItemActivated())
                     {
-                        editParameter(17, true);
+                        editParameter(MID_FREQ, true);
                         if (ImGui::IsMouseDoubleClicked(0))
                             fmid_freq = 1337.0f;
                     }
-                    setParameterValue(17, fmid_freq);
+                    setParameterValue(MID_FREQ, fmid_freq);
                 }
                 ImGui::PopFont();
                 ImGui::PopStyleColor(2);
@@ -636,11 +679,11 @@ protected:
                 {
                     if (ImGui::IsItemActivated())
                     {
-                        editParameter(7, true);
+                        editParameter(LOW, true);
                         if (ImGui::IsMouseDoubleClicked(0))
                             flow = 0.0f;
                     }
-                    setParameterValue(7, flow);
+                    setParameterValue(LOW, flow);
                 }
                 ImGui::PopStyleColor(2);
             }
@@ -650,16 +693,16 @@ protected:
 
             ImGui::BeginGroup();
             {
-                mangParams highParams = {1, 2, 3, 4, 5, 6};
-                std::tie(fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_mix
-                ) = showManglr("high", highParams, fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_mix, fhigh,
-                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, defaultFont, mediumFont,
+                mangParams highParams = {HIGH_CRSHR, HIGH_FLDR, HIGH_GAIN, HIGH_LMTR, HIGH_MIX, HIGH_SMTHR, HIGH_SQNC};
+                std::tie(fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_gain, fhigh_mix
+                ) = showManglr("high", highParams, fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_gain, fhigh_mix, fhigh,
+                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep, defaultFont, mediumFont,
                 HighColorActive, HighColorHovered, HighColorHeader);
 
-                mangParams midParams = {15, 16, 18, 19, 20, 21};
-                std::tie(fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_mix
-                ) = showManglr("mid", midParams, fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_mix, fmid,
-                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, defaultFont, mediumFont,
+                mangParams midParams = {MID_CRSHR, MID_FLDR, MID_GAIN, MID_LMTR, MID_MIX, MID_SMTHR, MID_SQNC};
+                std::tie(fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_gain, fmid_mix
+                ) = showManglr("mid", midParams, fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_gain, fmid_mix, fmid,
+                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep, defaultFont, mediumFont,
                 MidColorActive, MidColorHovered, MidColorHeader);
 
                 // Effect Headers
@@ -671,7 +714,7 @@ protected:
                     ImVec2 textSize = ImGui::CalcTextSize("bla");
                     auto textHeight = textSize.y;
                     auto textWidth = textSize.x;
-                    auto labelWidth = comboWidth + 333 * scaleFactor + toggleWidth + knobWidth + knobWidth + 15 * scaleFactor;
+                    auto labelWidth = comboWidth + 333 * scaleFactor + toggleWidth + knobWidth + knobWidth + knobWidth + 35 * scaleFactor;
 
                     ImGui::BeginChild(comChar("##FX", "labels"), ImVec2(labelWidth, textHeight * 2), true, window_flags);
                     // ImGui::Dummy(ImVec2(0.0f, 28.0f) * scaleFactor);
@@ -681,6 +724,7 @@ protected:
                         CenterTextX("Sqnc", comboWidth); ImGui::SameLine();
                         CenterTextX("FX", 333*scaleFactor); ImGui::SameLine();
                         CenterTextX("Lmtr", toggleWidth); ImGui::SameLine();
+                        CenterTextX("Gain", knobWidth); ImGui::SameLine();
                         CenterTextX("Mix", knobWidth); ImGui::SameLine();
                         ImGui::PopStyleColor();
                     }
@@ -691,38 +735,41 @@ protected:
                 }
                 ImGui::Dummy(ImVec2(0.0f, 19.0f) * scaleFactor);
 
-                mangParams lowParams = {8, 9, 10, 11, 12, 13};
-                std::tie(flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_mix
-                ) = showManglr("low", lowParams, flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_mix, flow,
-                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, defaultFont, mediumFont,
+                mangParams lowParams = {LOW_CRSHR, LOW_FLDR, LOW_GAIN, LOW_LMTR, LOW_MIX, LOW_SMTHR, LOW_SQNC};
+                std::tie(flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_gain, flow_mix
+                ) = showManglr("low", lowParams, flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_gain, flow_mix, flow,
+                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep, defaultFont, mediumFont,
                 LowColorActive, LowColorHovered, LowColorHeader);
             }
             ImGui::EndGroup();
 
             if (ImGui::IsItemDeactivated())
             {
-                editParameter(0, false);
-                editParameter(1, false);
-                editParameter(2, false);
-                editParameter(3, false);
-                editParameter(4, false);
-                editParameter(5, false);
-                editParameter(6, false);
-                editParameter(7, false);
-                editParameter(8, false);
-                editParameter(9, false);
-                editParameter(10, false);
-                editParameter(11, false);
-                editParameter(12, false);
-                editParameter(13, false);
-                editParameter(14, false);
-                editParameter(15, false);
-                editParameter(16, false);
-                editParameter(17, false);
-                editParameter(18, false);
-                editParameter(19, false);
-                editParameter(20, false);
-                editParameter(21, false);
+                editParameter(HIGH, false);
+                editParameter(HIGH_CRSHR, false);
+                editParameter(HIGH_FLDR, false);
+                editParameter(HIGH_GAIN, false);
+                editParameter(HIGH_LMTR, false);
+                editParameter(HIGH_MIX, false);
+                editParameter(HIGH_SMTHR, false);
+                editParameter(HIGH_SQNC, false);
+                editParameter(LOW, false);
+                editParameter(LOW_CRSHR, false);
+                editParameter(LOW_FLDR, false);
+                editParameter(LOW_GAIN, false);
+                editParameter(LOW_LMTR, false);
+                editParameter(LOW_MIX, false);
+                editParameter(LOW_SMTHR, false);
+                editParameter(LOW_SQNC, false);
+                editParameter(MID, false);
+                editParameter(MID_CRSHR, false);
+                editParameter(MID_FLDR, false);
+                editParameter(MID_FREQ, false);
+                editParameter(MID_GAIN, false);
+                editParameter(MID_LMTR, false);
+                editParameter(MID_MIX, false);
+                editParameter(MID_SMTHR, false);
+                editParameter(MID_SQNC, false);
             }
 
             ImGui::PopFont();
