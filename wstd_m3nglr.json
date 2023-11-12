@@ -8,7 +8,7 @@
         "enable_ui": true,
         "enable_modgui": true,
         "ui_size": {
-            "width": 888,
+            "width": 848,
             "height": 545
         },
         "midi_input": 0,
@@ -39,7 +39,7 @@
                 "S~F~C"
             ]
         },
-        "version": "0, 1, 0",
+        "version": "0, 3, 0",
         "license": "GPL-3.0-or-later",
         "homepage": "https://wasted.audio/software/wstd_m3nglr",
         "plugin_uri": "https://wasted.audio/software/wstd_m3nglr",

@@ -474,7 +474,7 @@ protected:
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)colorActive);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)colorHovered);
                 if (ImGuiKnobs::Knob(
-                    comChar("##Gain", name), &fgain, -20.0f, 0.0f, dbstep, "%.2fdB", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 5))
+                    comChar("##Gain", name), &fgain, -25.0f, 0.0f, dbstep, "%.2fdB", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 6))
                 {
                     if (ImGui::IsItemActivated())
                     {
@@ -688,7 +688,6 @@ protected:
                 ImGui::PopStyleColor(2);
             }
             ImGui::EndGroup(); ImGui::SameLine();
-            // ImGui::Dummy(ImVec2(20.0f, 0.0f) * getScaleFactor()); ImGui::SameLine();
             ImGui::Dummy(ImVec2(10.0f, 0.0f) * getScaleFactor()); ImGui::SameLine();
 
             ImGui::BeginGroup();
@@ -714,10 +713,9 @@ protected:
                     ImVec2 textSize = ImGui::CalcTextSize("bla");
                     auto textHeight = textSize.y;
                     auto textWidth = textSize.x;
-                    auto labelWidth = comboWidth + 333 * scaleFactor + toggleWidth + knobWidth + knobWidth + knobWidth + 35 * scaleFactor;
+                    auto labelWidth = comboWidth + 333 * scaleFactor + toggleWidth + knobWidth + knobWidth + knobWidth + 38 * scaleFactor;
 
                     ImGui::BeginChild(comChar("##FX", "labels"), ImVec2(labelWidth, textHeight * 2), true, window_flags);
-                    // ImGui::Dummy(ImVec2(0.0f, 28.0f) * scaleFactor);
                     ImGui::BeginGroup();
                     {
                         ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
@@ -729,7 +727,6 @@ protected:
                         ImGui::PopStyleColor();
                     }
                     ImGui::EndGroup();
-                    // ImGui::Dummy(ImVec2(0.0f, 28.0f) * scaleFactor);
                     ImGui::EndChild();
                     ImGui::PopStyleVar();
                 }
