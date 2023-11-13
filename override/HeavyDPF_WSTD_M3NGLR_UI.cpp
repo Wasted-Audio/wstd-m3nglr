@@ -221,13 +221,8 @@ protected:
 
     int showCrshr(const char* name, uint32_t param, int fcrshr, int crshstep, float hundred, float knobWidth, float KnobFlags, float intense)
     {
-        auto CrshrActive = ColorBright(Green, intense);
-        auto CrshrHovered = ColorBright(GreenBr, intense);
-
         ImGui::BeginGroup();
         {
-            // ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)CrshrActive);
-            // ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)CrshrHovered);
             ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
             CenterTextX("Crshr", knobWidth);
             ImGui::PopStyleColor();
@@ -243,7 +238,6 @@ protected:
                 }
                 setParameterValue(param, fcrshr);
             }
-            // ImGui::PopStyleColor(2);
         }
         ImGui::EndGroup();
         ImGui::SameLine();
@@ -252,13 +246,8 @@ protected:
 
     float showFldr(const char* name, uint32_t param, float ffldr, float elevstep, float hundred, float knobWidth, float KnobFlags, float intense)
     {
-        auto FldrActive  = ColorBright(Red, intense);
-        auto FldrHovered = ColorBright(RedBr, intense);
-
         ImGui::BeginGroup();
         {
-            // ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)FldrActive);
-            // ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)FldrHovered);
             ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
             CenterTextX("Fldr", knobWidth);
             ImGui::PopStyleColor();
@@ -274,7 +263,6 @@ protected:
                 }
                 setParameterValue(param, ffldr);
             }
-            // ImGui::PopStyleColor(2);
         }
         ImGui::EndGroup();
         ImGui::SameLine();
@@ -283,13 +271,8 @@ protected:
 
     float showSmthr(const char* name, uint32_t param, float fsmthr, float elevstep, float hundred, float knobWidth, float KnobFlags, float intense)
     {
-        auto SmthrActive  = ColorBright(Blue, intense);
-        auto SmthrHovered = ColorBright(BlueBr, intense);
-
         ImGui::BeginGroup();
         {
-            // ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)SmthrActive);
-            // ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)SmthrHovered);
             ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
             CenterTextX("Smthr", knobWidth);
             ImGui::PopStyleColor();
@@ -305,7 +288,6 @@ protected:
                 }
                 setParameterValue(param, fsmthr);
             }
-            // ImGui::PopStyleColor(2);
         }
         ImGui::EndGroup();
         ImGui::SameLine();
@@ -320,7 +302,6 @@ protected:
         {
 
         auto ImGuiKnob_Flags    = ImGuiKnobFlags_DoubleClickReset + ImGuiKnobFlags_ValueTooltip + ImGuiKnobFlags_NoInput + ImGuiKnobFlags_ValueTooltipHideOnClick + ImGuiKnobFlags_NoTitle;
-        auto ImGuiKnob_FlagsDB  = ImGuiKnob_Flags + ImGuiKnobFlags_dB;
         auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
 
         auto MixActive       = ColorMix(colorActive,  Yellow,   feq, fmix);
@@ -346,7 +327,7 @@ protected:
 
         ImGui::BeginGroup();
         {
-            ImGui::Dummy(ImVec2(0.0f, 9.0f * scaleFactor));
+            ImGui::Dummy(ImVec2(0.0f, 10.0f * scaleFactor));
 
             ImGui::PushStyleColor(ImGuiCol_Text,            TextClr);
             ImGui::PushStyleColor(ImGuiCol_FrameBg,         (ImVec4)ColorMix(WstdWindowBg, colorHeader, 0.5f, 50.0f));
@@ -354,7 +335,7 @@ protected:
             ImGui::PushStyleColor(ImGuiCol_HeaderHovered,   (ImVec4)colorActive);
             ImGui::PushStyleColor(ImGuiCol_HeaderActive,    (ImVec4)colorHovered);
             ImGui::PushFont(mediumFont);
-            if (ImGui::BeginListBox(comChar("##Sqnc", name), ImVec2(comboWidth, 101 * scaleFactor)))
+            if (ImGui::BeginListBox(comChar("##Sqnc", name), ImVec2(comboWidth, 99 * scaleFactor)))
             {
                 for (int n = 0; n < 6; n++)
                 {
@@ -381,7 +362,6 @@ protected:
         ImGui::SameLine();
 
         {
-
             ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar + ImGuiWindowFlags_NoScrollWithMouse;
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
             ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)colorHeader);
@@ -552,10 +532,6 @@ protected:
         ImFont* smallFont    = io.Fonts->Fonts[3];
         ImFont* mediumFont   = io.Fonts->Fonts[4];
 
-        auto ImGuiKnob_Flags    = ImGuiKnobFlags_DoubleClickReset + ImGuiKnobFlags_ValueTooltip + ImGuiKnobFlags_NoInput + ImGuiKnobFlags_ValueTooltipHideOnClick + ImGuiKnobFlags_NoTitle;
-        auto ImGuiKnob_FlagsDB  = ImGuiKnob_Flags + ImGuiKnobFlags_dB;
-        auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
-
         // Colors
         auto HighColorActive     = ColorBright(Blue,   fhigh);
         auto HighColorHovered    = ColorBright(BlueBr, fhigh);
@@ -569,22 +545,12 @@ protected:
         auto LowColorHovered     = ColorBright(RedBr,  flow);
         auto LowColorHeader      = ColorBright(RedDr,  flow);
 
-        auto MixActive       = ColorMix(HighColorActive,  Yellow,   fhigh, fhigh_mix);
-        auto MixHovered      = ColorMix(HighColorActive, YellowBr, fhigh, fhigh_mix);
-
-        auto SyncSw          = ColorBright(WhiteDr, fhigh, false);
-        auto SyncGr          = ColorBright(Grey, fhigh);
-        auto SyncGrHovered   = ColorBright(GreyBr, fhigh);
-        auto SyncAct         = ColorBright(BlueDr, fhigh);
-        auto SyncActHovered  = HighColorActive;
-
         // Sizes
         const float hundred      = 100 * scaleFactor;
         const float seventy      = 70 * scaleFactor;
         const float knobWidth    = 85 * scaleFactor;
         const float toggleWidth  = 20 * scaleFactor;
-        const float comboWidth   = 42 * scaleFactor;
-        const float eqText       = 45 * scaleFactor;
+        const float comboWidth   = 41 * scaleFactor;
 
         auto crshstep = 8;
         auto elevstep = 0.1f;
@@ -600,16 +566,6 @@ protected:
             dbstep = 0.01f;
             hzstep = 1.0f;
         }
-
-        const char* sqnc_list[6] = {
-            "C~F~S",
-            "C~S~F",
-            "F~C~S",
-            "F~S~C",
-            "S~C~F",
-            "S~F~C",
-        };
-
         ImGui::PushFont(titleBarFont);
         if (ImGui::Begin("WSTD M3NGLR", nullptr, ImGuiWindowFlags_NoResize + ImGuiWindowFlags_NoCollapse))
         {
@@ -713,11 +669,9 @@ protected:
                     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
 
                     ImVec2 textSize = ImGui::CalcTextSize("bla");
-                    auto textHeight = textSize.y;
-                    auto textWidth = textSize.x;
                     auto labelWidth = comboWidth + 333 * scaleFactor + toggleWidth + knobWidth + knobWidth + knobWidth + 38 * scaleFactor;
 
-                    ImGui::BeginChild(comChar("##FX", "labels"), ImVec2(labelWidth, textHeight * 2), true, window_flags);
+                    ImGui::BeginChild(comChar("##FX", "labels"), ImVec2(labelWidth, textSize.y * 2), true, window_flags);
                     ImGui::BeginGroup();
                     {
                         ImGui::PushStyleColor(ImGuiCol_Text, TextClr);
