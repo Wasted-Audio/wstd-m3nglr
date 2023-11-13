@@ -7,7 +7,6 @@
 #include "veramobd.hpp"
 #include "wstdcolors.hpp"
 #include <tuple>
-// #include "mangler_widget.hpp"
 
 
 START_NAMESPACE_DISTRHO
@@ -29,6 +28,37 @@ struct mangParams {
     int mix;
     int smthr;
     int sqnc;
+};
+
+struct mangValues {
+    int sqnc;
+    int crshr;
+    float fldr;
+    float smthr;
+    bool lmtr;
+    float gain;
+    float mix;
+    float eq;
+};
+
+struct mangSizes {
+    double scaleFactor;
+    float comboWidth;
+    float togglewidth;
+    float knobWidth;
+    float hundred;
+    int crshtep;
+    float elevstep;
+    float percstep;
+    float dbstep;
+};
+
+struct mangStyles {
+    ImFont* defaultFont;
+    ImFont* mediumFont;
+    ImColor colorActive;
+    ImColor colorHovered;
+    ImColor colorHeader;
 };
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -295,22 +325,35 @@ protected:
     }
 
     std::tuple<int, int, float, float, bool, float, float>
-    showManglr(const char* name, mangParams prms, int fsqnc, int fcrshr, float ffldr, float fsmthr, bool flmtr, float fgain, float fmix, float feq,
-                float scaleFactor, float comboWidth, float toggleWidth, float knobWidth, float hundred,
-                float crshstep, float elevstep, float percstep, float dbstep, ImFont* defaultFont, ImFont* mediumFont,
-                ImColor colorActive, ImColor colorHovered, ImColor colorHeader)
+    showManglr(const char* name, mangParams prms, mangValues vals, mangSizes size, mangStyles style)
         {
 
         auto ImGuiKnob_Flags    = ImGuiKnobFlags_DoubleClickReset + ImGuiKnobFlags_ValueTooltip + ImGuiKnobFlags_NoInput + ImGuiKnobFlags_ValueTooltipHideOnClick + ImGuiKnobFlags_NoTitle;
         auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
 
-        auto MixActive       = ColorMix(colorActive,  Yellow,   feq, fmix);
-        auto MixHovered      = ColorMix(colorHovered, YellowBr, feq, fmix);
+        auto colorActive     = style.colorActive;
+        auto colorHovered    = style.colorHovered;
+        auto colorHeader     = style.colorHeader;
+        auto defaultFont     = style.defaultFont;
+        auto mediumFont      = style.mediumFont;
 
-        auto SyncSw          = ColorBright(WhiteDr, feq, false);
-        auto SyncGr          = ColorBright(Grey, feq);
-        auto SyncGrHovered   = ColorBright(GreyBr, feq);
-        auto SyncAct         = ColorBright(colorHeader, feq);
+        auto scaleFactor     = size.scaleFactor;
+        auto comboWidth      = size.comboWidth;
+        // auto toggleWidth     = size.togglewidth;
+        auto knobWidth       = size.knobWidth;
+        auto hundred         = size.hundred;
+        auto crshstep        = size.crshtep;
+        auto elevstep        = size.elevstep;
+        auto percstep        = size.percstep;
+        auto dbstep          = size.dbstep;
+
+        auto MixActive       = ColorMix(colorActive,  Yellow,   vals.eq, vals.mix);
+        auto MixHovered      = ColorMix(colorHovered, YellowBr, vals.eq, vals.mix);
+
+        auto SyncSw          = ColorBright(WhiteDr, vals.eq, false);
+        auto SyncGr          = ColorBright(Grey, vals.eq);
+        auto SyncGrHovered   = ColorBright(GreyBr, vals.eq);
+        auto SyncAct         = ColorBright(colorHeader, vals.eq);
         auto SyncActHovered  = colorActive;
 
         const char* sqnc_list[6] = {
@@ -339,12 +382,12 @@ protected:
             {
                 for (int n = 0; n < 6; n++)
                 {
-                    bool is_selected = (fsqnc == n);
+                    bool is_selected = (vals.sqnc == n);
                     if (ImGui::Selectable(sqnc_list[n], is_selected))
                     {
-                        fsqnc = n;
+                        vals.sqnc = n;
                         editParameter(prms.sqnc, true);
-                        setParameterValue(prms.sqnc, fsqnc);
+                        setParameterValue(prms.sqnc, vals.sqnc);
                     }
                     if (is_selected)
                         ImGui::SetItemDefaultFocus();
@@ -368,36 +411,36 @@ protected:
             ImGui::BeginChild(comChar("##FX", name), ImVec2(333 * scaleFactor, 127 * scaleFactor), true, window_flags);
             ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)colorActive);
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)colorHovered);
-            switch (fsqnc) {
+            switch (vals.sqnc) {
                 case 0:
-                    fcrshr = showCrshr(name, prms.crshr, fcrshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, feq);
-                    ffldr  = showFldr(name, prms.fldr, ffldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    fsmthr = showSmthr(name, prms.smthr, fsmthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
+                    vals.crshr = showCrshr(name, prms.crshr, vals.crshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, vals.eq);
+                    vals.fldr  = showFldr(name, prms.fldr, vals.fldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.smthr = showSmthr(name, prms.smthr, vals.smthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
                     break;
                 case 1:
-                    fcrshr = showCrshr(name, prms.crshr, fcrshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, feq);
-                    fsmthr = showSmthr(name, prms.smthr, fsmthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    ffldr  = showFldr(name, prms.fldr, ffldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
+                    vals.crshr = showCrshr(name, prms.crshr, vals.crshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, vals.eq);
+                    vals.smthr = showSmthr(name, prms.smthr, vals.smthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.fldr  = showFldr(name, prms.fldr, vals.fldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
                     break;
                 case 2:
-                    ffldr  = showFldr(name, prms.fldr, ffldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    fcrshr = showCrshr(name, prms.crshr, fcrshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, feq);
-                    fsmthr = showSmthr(name, prms.smthr, fsmthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
+                    vals.fldr  = showFldr(name, prms.fldr, vals.fldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.crshr = showCrshr(name, prms.crshr, vals.crshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, vals.eq);
+                    vals.smthr = showSmthr(name, prms.smthr, vals.smthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
                     break;
                 case 3:
-                    ffldr  = showFldr(name, prms.fldr, ffldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    fsmthr = showSmthr(name, prms.smthr, fsmthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    fcrshr = showCrshr(name, prms.crshr, fcrshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, feq);
+                    vals.fldr  = showFldr(name, prms.fldr, vals.fldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.smthr = showSmthr(name, prms.smthr, vals.smthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.crshr = showCrshr(name, prms.crshr, vals.crshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, vals.eq);
                     break;
                 case 4:
-                    fsmthr = showSmthr(name, prms.smthr, fsmthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    fcrshr = showCrshr(name, prms.crshr, fcrshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, feq);
-                    ffldr  = showFldr(name, prms.fldr, ffldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
+                    vals.smthr = showSmthr(name, prms.smthr, vals.smthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.crshr = showCrshr(name, prms.crshr, vals.crshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, vals.eq);
+                    vals.fldr  = showFldr(name, prms.fldr, vals.fldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
                     break;
                 case 5:
-                    fsmthr = showSmthr(name, prms.smthr, fsmthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    ffldr  = showFldr(name, prms.fldr, ffldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, feq);
-                    fcrshr = showCrshr(name, prms.crshr, fcrshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, feq);
+                    vals.smthr = showSmthr(name, prms.smthr, vals.smthr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.fldr  = showFldr(name, prms.fldr, vals.fldr, elevstep, hundred, knobWidth, ImGuiKnob_Flags, vals.eq);
+                    vals.crshr = showCrshr(name, prms.crshr, vals.crshr, crshstep, hundred, knobWidth, ImGuiKnob_FlagsLog, vals.eq);
                     break;
             }
             ImGui::PopStyleColor(2);
@@ -433,12 +476,12 @@ protected:
                 // active colors
                 ImGui::PushStyleColor(ImGuiCol_Button,          (ImVec4)SyncAct);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)SyncActHovered);
-                if (ImGui::Toggle(comChar("##Lmtr", name), &flmtr, ImGuiToggleFlags_Animated))
+                if (ImGui::Toggle(comChar("##Lmtr", name), &vals.lmtr, ImGuiToggleFlags_Animated))
                 {
                     if (ImGui::IsItemActivated())
                     {
                         editParameter(prms.lmtr, true);
-                        setParameterValue(prms.lmtr, flmtr);
+                        setParameterValue(prms.lmtr, vals.lmtr);
                     }
                 }
                 ImGui::PopStyleColor(5);
@@ -454,15 +497,15 @@ protected:
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)colorActive);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)colorHovered);
                 if (ImGuiKnobs::Knob(
-                    comChar("##Gain", name), &fgain, -25.0f, 0.0f, dbstep, "%.2fdB", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 6))
+                    comChar("##Gain", name), &vals.gain, -25.0f, 0.0f, dbstep, "%.2fdB", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 6))
                 {
                     if (ImGui::IsItemActivated())
                     {
                         editParameter(prms.gain, true);
                         if (ImGui::IsMouseDoubleClicked(0))
-                            fgain = 0.0f;
+                            vals.gain = 0.0f;
                     }
-                    setParameterValue(prms.gain, fgain);
+                    setParameterValue(prms.gain, vals.gain);
                 }
                 ImGui::PopStyleColor(2);
             }
@@ -477,15 +520,15 @@ protected:
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive,    (ImVec4)MixActive);
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered,   (ImVec4)MixHovered);
                 if (ImGuiKnobs::Knob(
-                    comChar("##Mix", name), &fmix, 0.0f, 100.0f, percstep, "%.1f%%", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 11))
+                    comChar("##Mix", name), &vals.mix, 0.0f, 100.0f, percstep, "%.1f%%", ImGuiKnobVariant_SteppedTick, hundred, ImGuiKnob_Flags, 11))
                 {
                     if (ImGui::IsItemActivated())
                     {
                         editParameter(prms.mix, true);
                         if (ImGui::IsMouseDoubleClicked(0))
-                            fmix = 50.0f;
+                            vals.mix = 50.0f;
                     }
-                    setParameterValue(prms.mix, fmix);
+                    setParameterValue(prms.mix, vals.mix);
                 }
                 ImGui::PopStyleColor(2);
             }
@@ -495,13 +538,13 @@ protected:
         ImGui::PopFont();
 
         return std::make_tuple(
-            fsqnc,
-            fcrshr,
-            ffldr,
-            fsmthr,
-            flmtr,
-            fgain,
-            fmix
+            vals.sqnc,
+            vals.crshr,
+            vals.fldr,
+            vals.smthr,
+            vals.lmtr,
+            vals.gain,
+            vals.mix
         );
     }
 
@@ -650,17 +693,21 @@ protected:
 
             ImGui::BeginGroup();
             {
+                mangSizes mangSize = {scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep};
+
                 mangParams highParams = {HIGH_CRSHR, HIGH_FLDR, HIGH_GAIN, HIGH_LMTR, HIGH_MIX, HIGH_SMTHR, HIGH_SQNC};
+                mangValues highValues = {fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_gain, fhigh_mix, fhigh};
+                mangStyles highStyle = {defaultFont, mediumFont, HighColorActive, HighColorHovered, HighColorHeader};
+
                 std::tie(fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_gain, fhigh_mix
-                ) = showManglr("high", highParams, fhigh_sqnc, fhigh_crshr, fhigh_fldr, fhigh_smthr, fhigh_lmtr, fhigh_gain, fhigh_mix, fhigh,
-                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep, defaultFont, mediumFont,
-                HighColorActive, HighColorHovered, HighColorHeader);
+                ) = showManglr("high", highParams, highValues, mangSize, highStyle);
 
                 mangParams midParams = {MID_CRSHR, MID_FLDR, MID_GAIN, MID_LMTR, MID_MIX, MID_SMTHR, MID_SQNC};
+                mangValues midValues = {fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_gain, fmid_mix, fmid};
+                mangStyles midStyle = {defaultFont, mediumFont, MidColorActive, MidColorHovered, MidColorHeader};
+
                 std::tie(fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_gain, fmid_mix
-                ) = showManglr("mid", midParams, fmid_sqnc, fmid_crshr, fmid_fldr, fmid_smthr, fmid_lmtr, fmid_gain, fmid_mix, fmid,
-                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep, defaultFont, mediumFont,
-                MidColorActive, MidColorHovered, MidColorHeader);
+                ) = showManglr("mid", midParams, midValues, mangSize, midStyle);
 
                 // Effect Headers
                 ImGui::Dummy(ImVec2(0.0f, 19.0f) * scaleFactor);
@@ -689,10 +736,11 @@ protected:
                 ImGui::Dummy(ImVec2(0.0f, 19.0f) * scaleFactor);
 
                 mangParams lowParams = {LOW_CRSHR, LOW_FLDR, LOW_GAIN, LOW_LMTR, LOW_MIX, LOW_SMTHR, LOW_SQNC};
+                mangValues lowValues = {flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_gain, flow_mix, flow};
+                mangStyles lowStyle = {defaultFont, mediumFont, LowColorActive, LowColorHovered, LowColorHeader};
+
                 std::tie(flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_gain, flow_mix
-                ) = showManglr("low", lowParams, flow_sqnc, flow_crshr, flow_fldr, flow_smthr, flow_lmtr, flow_gain, flow_mix, flow,
-                scaleFactor, comboWidth, toggleWidth, knobWidth, hundred, crshstep, elevstep, percstep, dbstep, defaultFont, mediumFont,
-                LowColorActive, LowColorHovered, LowColorHeader);
+                ) = showManglr("low", lowParams, lowValues, mangSize, lowStyle);
             }
             ImGui::EndGroup();
 
