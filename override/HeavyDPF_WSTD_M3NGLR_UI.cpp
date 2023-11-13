@@ -620,6 +620,8 @@ protected:
             auto ImGuiKnob_FlagsDB = ImGuiKnob_Flags + ImGuiKnobFlags_dB;
             auto ImGuiKnob_FlagsLog = ImGuiKnob_Flags + ImGuiKnobFlags_Logarithmic;
 
+            ImGui::Dummy(ImVec2(4.0f * scaleFactor, 0.0f)); ImGui::SameLine();
+
             // EQ Section
             ImGui::BeginGroup();
             {
