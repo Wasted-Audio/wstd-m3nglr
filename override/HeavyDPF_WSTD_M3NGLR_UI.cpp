@@ -395,9 +395,9 @@ protected:
                 ImGui::EndListBox();
             }
             ImGui::PopStyleColor(5);
+            ImGui::PopFont();
         }
         ImGui::EndGroup();
-        ImGui::PopFont();
         ImGui::PushFont(defaultFont);
         ImGui::SameLine();
 
