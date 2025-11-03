@@ -39,7 +39,8 @@
                 "S~F~C"
             ]
         },
-        "version": "1, 0, 0",
+        "denormals": false,
+        "version": "1, 1, 0",
         "brand_id": "Wstd",
         "brand_id_no_vst3": true,
         "unique_id": "M3ng",
