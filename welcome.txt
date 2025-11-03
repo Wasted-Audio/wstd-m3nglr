@@ -1,0 +1,11 @@
+@name@
+
+The sum is greater than the parts. This effect plugin is a combination of our 3Q and MANGLR plugins for some triple band distortion action.
+
+It consists of 3 different distorting effects. Namely the CRSHR, which does bit reduction. The FLDR, a wave folder. And the SMTHR, a soft-clipping overdrive.
+
+The order of these 3 wave-mangling stages can be set at will, creating some wildly different sound distorting effects.
+
+At the end of this distortion chain there is an automated limiter, that will try to keep things within the RMS level of your input signal. Or you can control the gain manually if you want. Be careful with it as the output can potentially be very hot.
+
+Like all our other software this plugin is without DRM and Opensource.

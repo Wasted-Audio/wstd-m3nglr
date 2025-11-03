@@ -40,6 +40,9 @@
             ]
         },
         "version": "1, 0, 0",
+        "brand_id": "Wstd",
+        "brand_id_no_vst3": true,
+        "unique_id": "M3ng",
         "license": "GPL-3.0-or-later",
         "homepage": "https://wasted.audio/software/wstd_m3nglr",
         "plugin_uri": "https://wasted.audio/software/wstd_m3nglr",
@@ -48,7 +51,8 @@
             "lv2_sep",
             "vst2",
             "vst3",
-            "clap"
+            "clap",
+            "au"
         ],
         "lv2_info": "lv2:DistortionPlugin",
         "vst3_info": "Fx|Distortion|Stereo",
