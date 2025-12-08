@@ -374,6 +374,7 @@ protected:
             ImGui::PushStyleColor(ImGuiCol_HeaderHovered,   (ImVec4)colorActive);
             ImGui::PushStyleColor(ImGuiCol_HeaderActive,    (ImVec4)colorHovered);
             ImGui::PushFont(mediumFont);
+            ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 0.0f);
             if (ImGui::BeginListBox(comChar("##Sqnc", name), ImVec2(comboWidth, 99 * scaleFactor)))
             {
                 for (int n = 0; n < 6; n++)
@@ -392,6 +393,7 @@ protected:
             }
             ImGui::PopStyleColor(5);
             ImGui::PopFont();
+            ImGui::PopStyleVar();
         }
         ImGui::EndGroup();
         ImGui::PushFont(defaultFont);
