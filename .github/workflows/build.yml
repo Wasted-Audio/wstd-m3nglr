@@ -69,7 +69,7 @@ jobs:
 
       - uses: innodatalabs/action-pip-conf@1.0.0
         with:
-            pip-conf: "break-system-packages = true"
+            pip-conf: "[global]\nbreak-system-packages = true"
 
       - name: Import APP Certificates
         uses: apple-actions/import-codesign-certs@v2
