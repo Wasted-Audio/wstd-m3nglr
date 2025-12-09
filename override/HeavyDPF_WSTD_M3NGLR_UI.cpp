@@ -123,8 +123,6 @@ class ImGuiPluginUI : public UI
     float fmid_smthr = 1.0f;
     int fmid_sqnc = 0.0;
 
-    ResizeHandle fResizeHandle;
-
     // ----------------------------------------------------------------------------------------------------------------
 
 public:
@@ -133,11 +131,8 @@ public:
       The UI should be initialized to a default state that matches the plugin side.
     */
     ImGuiPluginUI()
-        : UI(DISTRHO_UI_DEFAULT_WIDTH, DISTRHO_UI_DEFAULT_HEIGHT, true),
-          fResizeHandle(this)
+        : UI(DISTRHO_UI_DEFAULT_WIDTH, DISTRHO_UI_DEFAULT_HEIGHT)
     {
-        setGeometryConstraints(DISTRHO_UI_DEFAULT_WIDTH, DISTRHO_UI_DEFAULT_HEIGHT, true);
-
         ImGuiIO& io(ImGui::GetIO());
 
         ImFontConfig fc;
@@ -152,8 +147,6 @@ public:
         io.Fonts->AddFontFromMemoryCompressedTTF((void*)veramobd_compressed_data, veramobd_compressed_size, 12.5f * getScaleFactor(), &fc);
         io.Fonts->Build();
         io.FontDefault = io.Fonts->Fonts[1];
-
-        fResizeHandle.hide();
     }
 
 protected:
@@ -381,6 +374,7 @@ protected:
             ImGui::PushStyleColor(ImGuiCol_HeaderHovered,   (ImVec4)colorActive);
             ImGui::PushStyleColor(ImGuiCol_HeaderActive,    (ImVec4)colorHovered);
             ImGui::PushFont(mediumFont);
+            ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 0.0f);
             if (ImGui::BeginListBox(comChar("##Sqnc", name), ImVec2(comboWidth, 99 * scaleFactor)))
             {
                 for (int n = 0; n < 6; n++)
@@ -399,6 +393,7 @@ protected:
             }
             ImGui::PopStyleColor(5);
             ImGui::PopFont();
+            ImGui::PopStyleVar();
         }
         ImGui::EndGroup();
         ImGui::PushFont(defaultFont);
